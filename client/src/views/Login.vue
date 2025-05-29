@@ -119,7 +119,118 @@ export default {
     const rememberMe = ref(false);
     const loading = ref(false);    
     
+    // Validate email
+    const validateEmail = () => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.value) {
+        return false;
+      } else if (!emailRegex.test(email.value)) {
+        return false;
+      }
+      return true;
+    };
+
+    // Validate password
+    const validatePassword = () => {
+      if (!password.value) {
+        return false;
+      } else if (password.value.length < 6) {
+        return false;
+      }
+      return true;
+    };
+
+    // Validate entire form
+    const validateForm = () => {
+      const isEmailValid = validateEmail();
+      const isPasswordValid = validatePassword();
+      return isEmailValid && isPasswordValid;
+    };    
     
+    // Handle form submission
+    const handleSubmit = async () => {
+      
+      // Validate form and show appropriate error messages
+      const isEmailValid = validateEmail();
+      const isPasswordValid = validatePassword();
+      
+      // If both fields are empty or invalid
+      if (!isEmailValid && !isPasswordValid) {
+        toastService.error('Please enter your email and password to login');
+        return;
+      }
+      
+      // If only email is invalid
+      if (!isEmailValid && isPasswordValid) {
+        if (!email.value) {
+          toastService.error('Email is required');
+        } else {
+          toastService.error('Please enter a valid email address');
+        }
+        return;
+      }
+      
+      // If only password is invalid
+      if (isEmailValid && !isPasswordValid) {
+        if (!password.value) {
+          toastService.error('Password is required');
+        } else {
+          toastService.error('Password must be at least 6 characters');
+        }
+        return;
+      }
+      
+      // If validation failed, return early
+      if (!isEmailValid || !isPasswordValid) {
+        return;
+      }
+      
+      // Show loading state
+      loading.value = true;
+      
+      try {
+        // Call the login API
+        const response = await authService.login(email.value, password.value);
+        
+        // Extract user and token from response
+        const { user, token } = response.data;
+        
+        // Store in localStorage or sessionStorage based on rememberMe
+        if (rememberMe.value) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
+        } else {
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('user', JSON.stringify(user));
+        }
+        
+        // Update store
+        authStore.login(user, token);
+        
+        // Show success message
+        toastService.success('Login successful');
+        
+        // Navigate to home page
+        router.push('/home');
+      } catch (error) {
+        // Handle login error
+        console.error('Login error:', error);
+        toastService.error(error.response?.data?.message || 'Login failed. Please check your credentials.');
+      } finally {
+        // Hide loading state
+        loading.value = false;
+      }
+    };
+      return {
+      email,
+      password,
+      rememberMe,
+      loading,
+      handleSubmit,
+      validateEmail,
+      validatePassword
+    };
+
   }
 }
 
