@@ -25,8 +25,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-            </span>            
-            <input 
+            </span>              <input 
               type="email"
               id="email"
               v-model="email"
@@ -34,9 +33,9 @@
               class="w-full pl-10 pr-4 py-3 rounded bg-white border border-white/20 focus:outline-none focus:border-orange-300 text-gray-800 transition-all duration-200 focus:shadow-sm"
               required
             />
-          </div>
-        </div>
+          </div>        </div>
         <!-- End of Email Field -->
+         
 
         <!-- Password Field -->
         <div class="flex flex-col gap-1">
@@ -47,8 +46,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
-            </span>            
-            <input
+            </span>              <input
               type="password"
               id="password"
               v-model="password"
@@ -71,8 +69,7 @@
             />
             <label for="remember-me" class="text-sm text-white">Remember me</label>
           </div>
-          <a href="#" class="text-sm text-white hover:underline hover:text-accent/90 transition-all duration-200">Forgot password?</a>
-        </div>
+          <a href="#" class="text-sm text-white hover:underline hover:text-accent/90 transition-all duration-200">Forgot password?</a>        </div>
         <!-- End of Options -->
         
         <!-- Submit Button -->        
@@ -95,8 +92,8 @@
 
     </div>
     <!-- End of Left Column - Login Form -->
-    
-    <!-- Right Column - Illustration -->
+
+      <!-- Right Column - Illustration -->
     <div class="hidden lg:flex lg:w-1/2 bg-white justify-center items-center p-8">
       <img src="../assets/images/login-illustration.png" alt="Login Illustration" class="max-w-full max-h-[80vh] object-contain" />
     </div>
