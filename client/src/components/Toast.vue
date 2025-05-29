@@ -61,28 +61,26 @@
   </transition>
 </template>
 
-<script>
-export default {
-  name: 'Toast',
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    },
-    type: {
-      type: String,
-      default: 'info',
-      validator: (value) => ['success', 'error', 'warning', 'info'].includes(value)
-    },
-    message: {
-      type: String,
-      required: true
-    },
-    duration: {
-      type: Number,
-      default: 3000
-    }
+<script setup>
+defineProps({
+  show: {
+    type: Boolean,
+    default: false
   },
-  emits: ['close']
-}
+  type: {
+    type: String,
+    default: 'info',
+    validator: (value) => ['success', 'error', 'warning', 'info'].includes(value)
+  },
+  message: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: Number,
+    default: 3000
+  }
+});
+
+defineEmits(['close']);
 </script>
