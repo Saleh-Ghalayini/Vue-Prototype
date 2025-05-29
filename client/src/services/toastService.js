@@ -1,49 +1,59 @@
 import { reactive } from 'vue';
 
-// Creating a reactive state for the toast
+// Creating a reactive state for toasts with unique IDs
 const state = reactive({
-  show: false,
-  message: '',
-  type: 'info', // 'success', 'error', 'warning', 'info'
-  duration: 3000
+  toasts: [],
+  nextId: 1
 });
 
 // Toast service to show notifications across the application
 export const useToast = () => {
   
   const showToast = (message, type = 'info', duration = 3000) => {
+    const id = state.nextId++;
     
-    // Reset any existing toast
-    if (state.show) {
-      hideToast();
-
-      // Adding a small delay to ensure that the transition is working properly
-      setTimeout(() => {
-        activateToast(message, type, duration);
-      }, 100);
-    } else {
-      activateToast(message, type, duration);
-    }
-  };
-
-  // Helper to activate the toast
-  const activateToast = (message, type, duration) => {
-    state.message = message;
-    state.type = type;
-    state.duration = duration;
-    state.show = true;
+    // Add new toast to the array
+    state.toasts.push({
+      id,
+      message,
+      type,
+      duration,
+      show: true
+    });
     
     // Auto-hide after duration (if not 0)
     if (duration > 0) {
       setTimeout(() => {
-        hideToast();
+        hideToast(id);
       }, duration);
     }
+    
+    return id;
   };
 
-  // Hide the current toast
-  const hideToast = () => {
-    state.show = false;
+  // Hide a specific toast by ID
+  const hideToast = (id) => {
+    const index = state.toasts.findIndex(toast => toast.id === id);
+    if (index !== -1) {
+      // Mark the toast as hidden first (for animation)
+      state.toasts[index].show = false;
+      
+      // Remove from array after animation completes
+      setTimeout(() => {
+        state.toasts = state.toasts.filter(toast => toast.id !== id);
+      }, 300); // Transition duration
+    }
+  };
+  
+  // Clear all toasts
+  const clearAll = () => {
+    // Mark all as hidden first
+    state.toasts.forEach(toast => toast.show = false);
+    
+    // Remove all after animation
+    setTimeout(() => {
+      state.toasts = [];
+    }, 300);
   };
 
   // Success toast shorthand
@@ -65,6 +75,7 @@ export const useToast = () => {
     // Methods
     showToast,
     hideToast,
+    clearAll,
     success,
     error,
     warning,
