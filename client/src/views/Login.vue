@@ -109,7 +109,18 @@ import authService from '../services/authService';
 import toastService from '../services/toastService';
 
 export default {
-
+  setup() {
+    const router = useRouter();
+    const authStore = useAuthStore();    
+    
+    // Form data
+    const email = ref('');
+    const password = ref('');
+    const rememberMe = ref(false);
+    const loading = ref(false);    
+    
+    
+  }
 }
 
 </script>
