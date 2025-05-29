@@ -9,7 +9,7 @@
   >
     <div 
       v-if="show" 
-      class="fixed bottom-4 right-4 px-4 py-3 rounded shadow-lg z-50 max-w-sm"
+      class="px-4 py-3 rounded shadow-lg max-w-sm"
       :class="{
         'bg-red-100 text-red-800 border-l-4 border-red-500': type === 'error',
         'bg-green-100 text-green-800 border-l-4 border-green-500': type === 'success',
@@ -83,25 +83,6 @@ export default {
       default: 3000
     }
   },
-  emits: ['close'],
-  watch: {
-    show(newVal) {
-      if (newVal && this.duration > 0) {
-        this.setupAutoClose();
-      }
-    }
-  },
-  methods: {
-    setupAutoClose() {
-      setTimeout(() => {
-        this.$emit('close');
-      }, this.duration);
-    }
-  },
-  mounted() {
-    if (this.show && this.duration > 0) {
-      this.setupAutoClose();
-    }
-  }
+  emits: ['close']
 }
 </script>
