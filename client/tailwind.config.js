@@ -15,7 +15,7 @@ module.exports = {
       success: '#22C55E',
     },
     fontFamily: {
-      sans: ['Inter', 'sans-serif'],
+      sans: ['Inter', 'Poppins', 'ui-sans-serif', 'system-ui'],
     },
   },
 },
