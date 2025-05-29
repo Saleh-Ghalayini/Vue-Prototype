@@ -83,5 +83,4 @@ export const useToast = () => {
   };
 };
 
-// Creating a singleton instance for use across the app
 export default useToast();
