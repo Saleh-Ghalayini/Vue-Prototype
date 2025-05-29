@@ -13,6 +13,85 @@
         </div>
       </div>
       <!-- End of Header -->
+      
+      <!-- Form Container -->
+      <div class="max-w-md mx-auto my-auto w-full flex flex-col gap-6">
+        <!-- Email Field -->
+        <div class="flex flex-col gap-1">
+          <label for="email" class="text-white">Email</label>
+          <div class="relative">
+            <!-- Email icon -->
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </span>            
+            <input 
+              type="email"
+              id="email"
+              v-model="email"
+              placeholder="example@gmail.com"
+              class="w-full pl-10 pr-4 py-3 rounded bg-white border border-white/20 focus:outline-none focus:border-orange-300 text-gray-800 transition-all duration-200 focus:shadow-sm"
+              required
+            />
+          </div>
+        </div>
+        <!-- End of Email Field -->
+
+        <!-- Password Field -->
+        <div class="flex flex-col gap-1">
+          <label for="password" class="text-white">Password</label>
+          <div class="relative">
+            <!-- Lock icon -->
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </span>            
+            <input
+              type="password"
+              id="password"
+              v-model="password"
+              placeholder="Enter your password"
+              class="w-full pl-10 pr-4 py-3 rounded bg-white border border-white/20 focus:outline-none focus:border-orange-300 text-gray-800 transition-all duration-200 focus:shadow-sm"
+              required
+            />
+          </div>
+        </div>
+        <!-- End of Password Field -->
+          
+        <!-- Options -->
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <input 
+              type="checkbox" 
+              id="remember-me"
+              v-model="rememberMe"
+              class="accent-white"
+            />
+            <label for="remember-me" class="text-sm text-white">Remember me</label>
+          </div>
+          <a href="#" class="text-sm text-white hover:underline hover:text-accent/90 transition-all duration-200">Forgot password?</a>
+        </div>
+        <!-- End of Options -->
+        
+        <!-- Submit Button -->        
+        <button
+          type="submit"
+          @click="handleSubmit"
+          :disabled="loading"
+          class="w-full h-12 bg-[#FDE68A] text-primary rounded font-medium transition hover:bg-[#FADD6B] disabled:opacity-70"
+        >
+          {{ loading ? 'Signing in...' : 'Sign in' }}
+        </button>
+      </div>
+      <!-- End of Form Container -->
+
+      <!-- Footer -->
+      <div class="absolute bottom-8 left-0 right-0 text-center">
+        <a href="#" class="text-white hover:underline hover:text-accent/90 transition-all duration-200">Trouble signing in?</a>
+      </div>
+      <!-- End of Footer -->
 
     </div>
     <!-- End of Left Column - Login Form -->
