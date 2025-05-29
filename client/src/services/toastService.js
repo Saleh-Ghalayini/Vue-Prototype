@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 
-// Creating a reactive state for the toast
+// Create a reactive state for the toast
 const state = reactive({
   show: false,
   message: '',
@@ -11,29 +11,14 @@ const state = reactive({
 // Toast service to show notifications across the application
 export const useToast = () => {
   
+  // Show a toast notification
   const showToast = (message, type = 'info', duration = 3000) => {
-    
-    // Reset any existing toast
-    if (state.show) {
-      hideToast();
-
-      // Adding a small delay to ensure that the transition is working properly
-      setTimeout(() => {
-        activateToast(message, type, duration);
-      }, 100);
-    } else {
-      activateToast(message, type, duration);
-    }
-  };
-
-  // Helper to activate the toast
-  const activateToast = (message, type, duration) => {
     state.message = message;
     state.type = type;
     state.duration = duration;
     state.show = true;
     
-    // Auto-hide after duration (if not 0)
+    // Auto-hide after duration
     if (duration > 0) {
       setTimeout(() => {
         hideToast();
@@ -72,5 +57,5 @@ export const useToast = () => {
   };
 };
 
-// Creating a singleton instance for use across the app
+// Create a singleton instance for use across the app
 export default useToast();
