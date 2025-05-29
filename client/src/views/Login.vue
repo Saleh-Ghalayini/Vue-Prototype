@@ -92,10 +92,24 @@
 
     </div>
     <!-- End of Left Column - Login Form -->
-
-      <!-- Right Column - Illustration -->
+     
+    <!-- Right Column - Illustration -->
     <div class="hidden lg:flex lg:w-1/2 bg-white justify-center items-center p-8">
       <img src="../assets/images/login-illustration.png" alt="Login Illustration" class="max-w-full max-h-[80vh] object-contain" />
     </div>
   </div>
 </template>
+
+<script>
+
+import {ref, computed} from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../store/auth';
+import authService from '../services/authService';
+import toastService from '../services/toastService';
+
+export default {
+
+}
+
+</script>
