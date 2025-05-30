@@ -37,7 +37,7 @@ export function useAuth() {
       
       return response.data;
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials.';
+      const errorMessage = err.response?.data?.message || 'Login failed';
       error.value = errorMessage;
       toast.error(errorMessage);
       throw err;
@@ -49,13 +49,13 @@ export function useAuth() {
   const register = async (name, email, password) => {
     loading.value = true;
     error.value = null;
-    
+
     try {
       const response = await authService.register(name, email, password);
-      toast.success('Registration successful! Please log in.');
+      toast.success('Registration successful');
       return response.data;
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Registration failed.';
+      const errorMessage = err.response?.data?.message || 'Registration failed';
       error.value = errorMessage;
       toast.error(errorMessage);
       throw err;
