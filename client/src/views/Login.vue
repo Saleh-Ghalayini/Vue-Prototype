@@ -4,12 +4,11 @@
     <!-- Left Column - Login Form -->
     <div class="w-full lg:w-1/2 flex flex-col relative bg-primary p-8">
 
-      <!-- Header -->
-      <div class="absolute top-8 left-0 right-0 flex justify-between items-center px-8">
+      <!-- Header -->      <div class="absolute top-8 left-0 right-0 flex justify-between items-center px-8">
         <div class="flex items-center gap-2">
           <span class="text-2xl font-bold text-white font-sans">SEF Hiring Portal</span>
         </div>        <div>
-          <a href="#" class="text-white hover:underline transition-all duration-200 hover:text-accent/90">Create an account</a>
+          <router-link to="/register" class="text-white hover:underline transition-all duration-200 hover:text-accent/90">Create an account</router-link>
         </div>
       </div>
       <!-- End of Header -->
@@ -111,6 +110,7 @@ const rememberMe = ref(false);
 
 // Get authentication functions from our composable
 const { login, loading, error } = useAuth();
+const toast = inject('toast');
 
 // Validate email
 const validateEmail = () => {
@@ -142,7 +142,7 @@ const validateForm = () => {
 
 // Handle form submission
 const handleSubmit = async () => {
-  
+
   // Get validation status
   const isEmailValid = validateEmail();
   const isPasswordValid = validatePassword();
