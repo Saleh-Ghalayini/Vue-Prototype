@@ -100,7 +100,7 @@ export function useAuth() {
         authStore.login(user, token);
         return true;
       } catch (err) {
-        
+
         console.error('Error restoring auth state:', err);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
