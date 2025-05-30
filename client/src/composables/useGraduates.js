@@ -51,4 +51,15 @@ export function useGraduates() {
       videoCV: 'https://youtube.com/watch?v=example4'
     }
   ]);
+
+  return {
+    graduates,
+    filteredGraduates,
+    searchQuery,
+    selectedSkill,
+    applyFilters,
+    resetFilters,
+    bookInterview,
+    openLink
+  };
 }
