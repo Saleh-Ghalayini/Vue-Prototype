@@ -2,12 +2,17 @@ export const graduateService = {
 
   async getAll() {
     try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/graduates`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
       return {
         success: true,
-        data: [], // This should be replaced with actual graduate data
+        data: data.data || data,
       };
     } catch (error) {
-      console.error('Error fetching graduates:', error);
+      console.error(error);
       return {
         success: false,
         message: error.message || 'Failed to fetch graduates'
@@ -22,7 +27,7 @@ export const graduateService = {
         message: 'Interview request sent successfully'
       };
     } catch (error) {
-      console.error('Error booking interview:', error);
+      console.error(error);
       return {
         success: false,
         message: error.message || 'Failed to book interview'
