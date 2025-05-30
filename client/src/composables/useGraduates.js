@@ -52,6 +52,59 @@ export function useGraduates() {
     }
   ]);
 
+  // Search and filter state
+  const searchQuery = ref('');
+  const selectedSkill = ref('');
+  const appliedSearchQuery = ref('');
+  const appliedSkill = ref('');
+
+  // Filtered graduates based on applied search and filter
+  const filteredGraduates = computed(() => {
+    return graduates.value.filter(graduate => {
+      // Filter by search query (name, email, or skills)
+      const matchesSearch = appliedSearchQuery.value === '' || 
+        graduate.name.toLowerCase().includes(appliedSearchQuery.value.toLowerCase()) ||
+        graduate.email.toLowerCase().includes(appliedSearchQuery.value.toLowerCase()) ||
+        graduate.skills.some(skill => skill.toLowerCase().includes(appliedSearchQuery.value.toLowerCase()));
+      
+      // Filter by selected skill
+      const matchesSkill = appliedSkill.value === '' ||
+        graduate.skills.some(skill => skill.toLowerCase() === appliedSkill.value.toLowerCase());
+      
+      return matchesSearch && matchesSkill;
+    });
+  });
+
+  // Apply filters when button is clicked
+  const applyFilters = () => {
+    appliedSearchQuery.value = searchQuery.value;
+    appliedSkill.value = selectedSkill.value;
+    toast.info(`Applied filters: ${searchQuery.value ? `Search: ${searchQuery.value}` : ''} ${selectedSkill.value ? `Skill: ${selectedSkill.value}` : ''}`);
+  };
+
+  // Reset filters
+  const resetFilters = () => {
+    searchQuery.value = '';
+    selectedSkill.value = '';
+    appliedSearchQuery.value = '';
+    appliedSkill.value = '';
+  };
+
+  // Handle booking an interview
+  const bookInterview = (graduate) => {
+    toast.success(`Interview request sent to ${graduate.name}`);
+  };
+
+  // Open links in new tab
+  const openLink = (url, type, name) => {
+    if (url) {
+      window.open(url, '_blank');
+      toast.info(`Opened ${type} for ${name}`);
+    } else {
+      toast.warning(`${type} not available for ${name}`);
+    }
+  };
+
   return {
     graduates,
     filteredGraduates,
