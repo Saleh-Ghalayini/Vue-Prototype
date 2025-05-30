@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,11 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create a default recruiter account
+        User::create([
+            'name' => 'Recruiter',
+            'email' => 'recruiter@example.com',
+            'password' => Hash::make('password'),
         ]);
+
+        // Run the graduate seeder
+        $this->call(GraduateSeeder::class);
     }
 }
