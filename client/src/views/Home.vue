@@ -10,15 +10,17 @@ const {
   filteredGraduates,
   searchQuery,
   selectedSkill,
+  availableSkills,
   applyFilters,
   resetFilters,
   bookInterview,
-  openLink
+  openLink,
+  loading,
+  error,
+  fetchGraduates
 } = useGraduates();
 
-const userName = computed(() => {
-  return authStore.user?.name || 'Recruiter';
-});
+const userName = computed(() => authStore.user?.name || 'Recruiter');
 
 const handleLogout = async () => {
   await logout();
@@ -42,11 +44,12 @@ const handleLogout = async () => {
         Logout
       </button>
     </div>
-    
+
     <!-- Filter & Search Section -->
     <div class="max-w-6xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-md">
       <h2 class="text-xl font-semibold text-primary mb-4">Find Graduates</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">        <div class="relative">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="relative">
           <input 
             v-model="searchQuery"
             type="text" 
@@ -62,26 +65,51 @@ const handleLogout = async () => {
           class="py-2 px-4 rounded border border-gray-300 focus:outline-none focus:border-primary"
         >
           <option value="">Filter by skill</option>
-          <option value="vue.js">Vue.js</option>
-          <option value="react">React</option>
-          <option value="node.js">Node.js</option>
-          <option value="typescript">TypeScript</option>
-          <option value="express">Express</option>
-          <option value="figma">Figma</option>
-          <option value="java">Java</option>
+          <option v-for="skill in availableSkills" :key="skill" :value="skill">
+            {{ skill }}
+          </option>
         </select>
-        <button 
-          @click="applyFilters"
-          class="py-2 px-4 bg-primary text-white rounded hover:bg-primary/90 transition-colors"
-        >
-          Apply Filters
-        </button>
+        <div class="flex gap-2">
+          <button 
+            @click="applyFilters"
+            class="py-2 px-4 bg-primary text-white rounded hover:bg-primary/90 transition-colors flex-grow"
+          >
+            Apply Filters
+          </button>
+          <button 
+            @click="fetchGraduates"
+            class="py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+            title="Refresh graduate list"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
     
     <!-- Graduate Profile Cards Grid: 2x2 -->
     <div class="max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Loading state -->
+      <div v-if="loading" class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+      
+      <!-- Error message -->
+      <div v-else-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded">
+        <p class="font-medium">Error loading graduates</p>
+        <p>{{ error }}</p>
+        <button 
+          @click="fetchGraduates"
+          class="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+      
+      <!-- Graduate cards grid -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
         <!-- Graduate Profile Cards -->        
         <div 
@@ -102,11 +130,10 @@ const handleLogout = async () => {
            <div class="text-center mb-4">
             <h3 class="text-xl font-bold text-primary">{{ graduate.name }}</h3>
             <p class="text-gray-600">{{ graduate.email }}</p>
-            
-            <!-- Skills Tags -->
+              <!-- Skills Tags -->
             <div class="flex flex-wrap justify-center gap-2 mt-2">
               <span
-                v-for="(skill, index) in graduate.skills"
+                v-for="(skill, index) in typeof graduate.skills === 'string' ? JSON.parse(graduate.skills) : graduate.skills"
                 :key="index"
                 class="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
               >
@@ -172,11 +199,10 @@ const handleLogout = async () => {
               Book Interview
             </button>
           </div>
-        </div>      
-      </div>
+        </div>        </div>
 
-        <!-- No results message -->
-      <div v-if="filteredGraduates.length === 0" class="text-center py-8">
+      <!-- No results message -->
+      <div v-if="!loading && !error && filteredGraduates.length === 0" class="text-center py-8">
         <p class="text-gray-600">No graduates found matching your search criteria.</p>
         <button 
           @click="resetFilters"
