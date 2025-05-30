@@ -1,62 +1,38 @@
-import { inject } from 'vue';
+import { inject, onMounted } from 'vue';
 import { ref, computed } from 'vue';
+import { graduateService } from '../services/graduateService';
 
 export function useGraduates() {
   const toast = inject('toast');
   
-  // Mock data for graduate profiles
-  const graduates = ref([
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      email: 'sarah.johnson@example.com',
-      skills: ['Vue.js', 'React', 'TypeScript'],
-      photo: 'https://randomuser.me/api/portraits/women/44.jpg',
-      linkedIn: 'https://linkedin.com/in/example1',
-      github: 'https://github.com/example1',
-      cv: '/assets/cv/sarah-johnson-cv.pdf',
-      videoCV: 'https://youtube.com/watch?v=example1'
-    },
-    {
-      id: 2,
-      name: 'David Chen',
-      email: 'david.chen@example.com',
-      skills: ['Node.js', 'Express', 'MongoDB'],
-      photo: 'https://randomuser.me/api/portraits/men/32.jpg',
-      linkedIn: 'https://linkedin.com/in/example2',
-      github: 'https://github.com/example2',
-      cv: '/assets/cv/david-chen-cv.pdf',
-      videoCV: 'https://youtube.com/watch?v=example2'
-    },
-    {
-      id: 3,
-      name: 'Maya Patel',
-      email: 'maya.patel@example.com',
-      skills: ['Figma', 'Adobe XD', 'Vue.js'],
-      photo: 'https://randomuser.me/api/portraits/women/67.jpg',
-      linkedIn: 'https://linkedin.com/in/example3',
-      github: 'https://github.com/example3',
-      cv: '/assets/cv/maya-patel-cv.pdf',
-      videoCV: 'https://youtube.com/watch?v=example3'
-    },
-    {
-      id: 4,
-      name: 'James Wilson',
-      email: 'james.wilson@example.com',
-      skills: ['Java', 'Spring Boot', 'PostgreSQL'],
-      photo: 'https://randomuser.me/api/portraits/men/52.jpg',
-      linkedIn: 'https://linkedin.com/in/example4',
-      github: 'https://github.com/example4',
-      cv: '/assets/cv/james-wilson-cv.pdf',
-      videoCV: 'https://youtube.com/watch?v=example4'
-    }
-  ]);
+  const graduates = ref([]);
+  const loading = ref(false);
+  const error = ref(null);
 
   // Search and filter state
   const searchQuery = ref('');
   const selectedSkill = ref('');
   const appliedSearchQuery = ref('');
   const appliedSkill = ref('');
+
+  // Extract all unique skills from graduates
+  const availableSkills = computed(() => {
+    if (!graduates.value || graduates.value.length === 0) return [];
+    
+    // Collect all skills from all graduates
+    const allSkills = graduates.value.reduce((skills, graduate) => {
+      if (graduate.skills && Array.isArray(graduate.skills)) {
+        skills.push(...graduate.skills);
+      }
+      return skills;
+    }, []);
+    
+    // Get unique skills and sort them alphabetically
+    return [...new Set(allSkills)]
+      .map(skill => skill.trim())
+      .filter(skill => skill)
+      .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+  });
 
   // Filtered graduates based on applied search and filter
   const filteredGraduates = computed(() => {
@@ -79,7 +55,7 @@ export function useGraduates() {
   const applyFilters = () => {
     appliedSearchQuery.value = searchQuery.value;
     appliedSkill.value = selectedSkill.value;
-    toast.info(`Applied filters: ${searchQuery.value ? `Search: ${searchQuery.value}` : ''} ${selectedSkill.value ? `Skill: ${selectedSkill.value}` : ''}`);
+    toast.info('Filters applied successfully');
   };
 
   // Reset filters
@@ -89,7 +65,6 @@ export function useGraduates() {
     appliedSearchQuery.value = '';
     appliedSkill.value = '';
   };
-
   // Handle booking an interview
   const bookInterview = (graduate) => {
     toast.success(`Interview request sent to ${graduate.name}`);
@@ -105,14 +80,40 @@ export function useGraduates() {
     }
   };
 
+  const fetchGraduates = async () => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const response = await graduateService.getAll();
+      if (response.success) {
+        graduates.value = response.data;
+      } else {
+        error.value = response.message;
+        toast.error(error.value || 'Failed to fetch graduates');
+      }
+    } catch (err) {
+      error.value = err.message;
+      toast.error(err.message || 'An unexpected error occurred');
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  onMounted(() => {
+    fetchGraduates();
+  });
   return {
     graduates,
     filteredGraduates,
     searchQuery,
     selectedSkill,
+    availableSkills,
     applyFilters,
     resetFilters,
     bookInterview,
-    openLink
+    openLink,
+    loading,
+    error,
+    fetchGraduates
   };
 }
