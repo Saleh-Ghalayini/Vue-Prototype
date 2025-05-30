@@ -126,19 +126,15 @@ import { ref, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 
-// Form data
 const name = ref('');
 const email = ref('');
 const password = ref('');
 
-// Get router for navigation
 const router = useRouter();
 
-// Get authentication functions from our composable
 const { register, loading, error } = useAuth();
 const toast = inject('toast');
 
-// Validate name
 const validateName = () => {
   if (!name.value || name.value.trim().length < 2) {
     return false;
@@ -146,7 +142,6 @@ const validateName = () => {
   return true;
 };
 
-// Validate email
 const validateEmail = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email.value) {
@@ -157,7 +152,6 @@ const validateEmail = () => {
   return true;
 };
 
-// Validate password
 const validatePassword = () => {
   // Password must be at least 6 characters and include at least one letter and one number
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
@@ -169,14 +163,12 @@ const validatePassword = () => {
   return true;
 };
 
-// Handle form submission
 const handleSubmit = async () => {
-  // Validate each field
+
   const isNameValid = validateName();
   const isEmailValid = validateEmail();
   const isPasswordValid = validatePassword();
   
-  // Show appropriate error messages
   if (!isNameValid) {
     toast.error('Please enter your full name');
     return;
@@ -199,11 +191,10 @@ const handleSubmit = async () => {
     }
     return;
   }
-    // If all validations pass, attempt registration
+
   try {
     await register(name.value, email.value, password.value);
-    // The success message is already shown by the composable
-    router.push('/'); // Redirect to login page
+    router.push('/');
   } catch (err) {
     // Error handling is already inside the composable
   }
